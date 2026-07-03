@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use gtk::prelude::*;
+use gtk4::prelude::*;
 #[cfg(any(
   target_os = "linux",
   target_os = "dragonfly",

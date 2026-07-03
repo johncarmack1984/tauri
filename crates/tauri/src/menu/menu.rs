@@ -64,9 +64,8 @@ impl<R: Runtime> ContextMenuBase for Menu<R> {
         target_os = "openbsd"
       ))]
       if let Ok(w) = window.gtk_window() {
-        self_
-          .inner()
-          .show_context_menu_for_gtk_window(w.as_ref(), position);
+        // Linux menus are inert in this configuration: muda is built without its gtk feature.
+        let _ = (self_.inner(), w, position);
       }
 
       #[cfg(windows)]

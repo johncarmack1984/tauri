@@ -759,7 +759,7 @@ impl<'a, R: Runtime, M: Manager<R>> WindowBuilder<'a, R, M> {
     target_os = "openbsd"
   ))]
   #[must_use]
-  pub fn transient_for_raw(mut self, parent: &impl gtk::glib::IsA<gtk::Window>) -> Self {
+  pub fn transient_for_raw(mut self, parent: &impl gtk4::glib::prelude::IsA<gtk4::Window>) -> Self {
     self.window_builder = self.window_builder.transient_for(parent);
     self
   }
@@ -1311,9 +1311,8 @@ tauri::Builder::default()
         target_os = "openbsd"
       ))]
       if let (Ok(gtk_window), Ok(gtk_box)) = (window.gtk_window(), window.default_vbox()) {
-        let _ = menu_
-          .inner()
-          .init_for_gtk_window(&gtk_window, Some(&gtk_box));
+        // Linux menus are inert in this configuration: muda is built without its gtk feature.
+        let _ = (menu_.inner(), gtk_window, gtk_box);
       }
     })?;
 
@@ -1352,7 +1351,8 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          let _ = menu.inner().remove_for_gtk_window(&gtk_window);
+          // Linux menus are inert in this configuration: muda is built without its gtk feature.
+          let _ = (menu.inner(), gtk_window);
         }
       })?;
     }
@@ -1388,7 +1388,8 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          let _ = menu_.inner().hide_for_gtk_window(&gtk_window);
+          // Linux menus are inert in this configuration: muda is built without its gtk feature.
+          let _ = (menu_.inner(), gtk_window);
         }
       })?;
     }
@@ -1420,7 +1421,8 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          let _ = menu_.inner().show_for_gtk_window(&gtk_window);
+          // Linux menus are inert in this configuration: muda is built without its gtk feature.
+          let _ = (menu_.inner(), gtk_window);
         }
       })?;
     }
@@ -1453,7 +1455,9 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          let _ = tx.send(menu_.inner().is_visible_on_gtk_window(&gtk_window));
+          // Linux menus are inert in this configuration: muda is built without its gtk feature.
+          let _ = (menu_.inner(), gtk_window);
+          let _ = tx.send(false);
         }
       })?;
 
@@ -1703,11 +1707,11 @@ impl<R: Runtime> Window<R> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  pub fn gtk_window(&self) -> crate::Result<gtk::ApplicationWindow> {
+  pub fn gtk_window(&self) -> crate::Result<gtk4::ApplicationWindow> {
     self.window.dispatcher.gtk_window().map_err(Into::into)
   }
 
-  /// Returns the vertical [`gtk::Box`] that is added by default as the sole child of this window.
+  /// Returns the vertical [`gtk4::Box`] that is added by default as the sole child of this window.
   ///
   /// Note that this type can only be used on the main thread.
   #[cfg(any(
@@ -1717,7 +1721,7 @@ impl<R: Runtime> Window<R> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  pub fn default_vbox(&self) -> crate::Result<gtk::Box> {
+  pub fn default_vbox(&self) -> crate::Result<gtk4::Box> {
     self.window.dispatcher.default_vbox().map_err(Into::into)
   }
 

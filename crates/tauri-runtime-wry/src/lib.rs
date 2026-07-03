@@ -46,6 +46,7 @@ use tao::platform::macos::{EventLoopWindowTargetExtMacOS, WindowBuilderExtMacOS}
   target_os = "netbsd",
   target_os = "openbsd"
 ))]
+use gtk4::prelude::Cast;
 use tao::platform::unix::{WindowBuilderExtUnix, WindowExtUnix};
 #[cfg(windows)]
 use tao::platform::windows::{WindowBuilderExtWindows, WindowExtWindows};
@@ -1094,7 +1095,7 @@ impl WindowBuilder for WindowBuilderWrapper {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn transient_for(mut self, parent: &impl gtk::glib::IsA<gtk::Window>) -> Self {
+  fn transient_for(mut self, parent: &impl gtk4::glib::prelude::IsA<gtk4::Window>) -> Self {
     self.inner = self.inner.with_transient_for(parent);
     self
   }
@@ -1251,7 +1252,7 @@ impl WindowBuilder for WindowBuilderWrapper {
   target_os = "netbsd",
   target_os = "openbsd"
 ))]
-pub struct GtkWindow(pub gtk::ApplicationWindow);
+pub struct GtkWindow(pub gtk4::ApplicationWindow);
 #[cfg(any(
   target_os = "linux",
   target_os = "dragonfly",
@@ -1269,7 +1270,7 @@ unsafe impl Send for GtkWindow {}
   target_os = "netbsd",
   target_os = "openbsd"
 ))]
-pub struct GtkBox(pub gtk::Box);
+pub struct GtkBox(pub gtk4::Box);
 #[cfg(any(
   target_os = "linux",
   target_os = "dragonfly",
@@ -2031,7 +2032,7 @@ impl<T: UserEvent> WindowDispatch<T> for WryWindowDispatcher<T> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn gtk_window(&self) -> Result<gtk::ApplicationWindow> {
+  fn gtk_window(&self) -> Result<gtk4::ApplicationWindow> {
     window_getter!(self, WindowMessage::GtkWindow).map(|w| w.0)
   }
 
@@ -2042,7 +2043,7 @@ impl<T: UserEvent> WindowDispatch<T> for WryWindowDispatcher<T> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn default_vbox(&self) -> Result<gtk::Box> {
+  fn default_vbox(&self) -> Result<gtk4::Box> {
     window_getter!(self, WindowMessage::GtkBox).map(|w| w.0)
   }
 
@@ -3338,7 +3339,7 @@ fn handle_user_message<T: UserEvent>(
             target_os = "netbsd",
             target_os = "openbsd"
           ))]
-          WindowMessage::GtkWindow(tx) => tx.send(GtkWindow(window.gtk_window().clone())).unwrap(),
+          WindowMessage::GtkWindow(tx) => tx.send(GtkWindow(window.gtk_window().clone().upcast())).unwrap(),
           #[cfg(any(
             target_os = "linux",
             target_os = "dragonfly",
@@ -3625,7 +3626,7 @@ fn handle_user_message<T: UserEvent>(
             ))]
             let reparent_result = {
               if let Some(container) = new_parent_window.default_vbox() {
-                webview.inner.reparent(container)
+                wry::WebViewExtUnix::reparent(&*webview.inner, container)
               } else {
                 Err(wry::Error::MessageSender)
               }
@@ -4568,7 +4569,7 @@ fn create_window<T: UserEvent, F: Fn(RawWindow) + Send + 'static>(
         target_os = "netbsd",
         target_os = "openbsd"
       ))]
-      gtk_window: window.gtk_window(),
+      gtk_window: window.gtk_window().upcast_ref(),
       #[cfg(any(
         target_os = "linux",
         target_os = "dragonfly",
@@ -4825,8 +4826,18 @@ You may have it installed on another user account, but it is not available for t
           features.size,
           features.position,
           tauri_runtime::webview::NewWindowOpener {
-            #[cfg(desktop)]
-            webview: features.opener.webview,
+            #[cfg(any(
+              target_os = "linux",
+              target_os = "dragonfly",
+              target_os = "freebsd",
+              target_os = "netbsd",
+              target_os = "openbsd",
+            ))]
+            webview: wry::WebViewHandleExtUnix::into_webkit6_webview(features.opener.webview),
+            #[cfg(windows)]
+            webview: wry::WebViewHandleExtWindows::into_core_webview2(features.opener.webview),
+            #[cfg(target_os = "macos")]
+            webview: wry::WebViewHandleExtDarwin::into_wk_webview(features.opener.webview),
             #[cfg(windows)]
             environment: features.opener.environment,
             #[cfg(target_os = "macos")]
@@ -4859,7 +4870,7 @@ You may have it installed on another user account, but it is not available for t
               target_os = "netbsd",
               target_os = "openbsd",
             ))]
-            webview: webview.webview(),
+            webview: wry::WebViewHandle::from_webkit6_webview(webview.webview()),
             #[cfg(windows)]
             webview: webview.webview(),
           }
@@ -5010,7 +5021,7 @@ You may have it installed on another user account, but it is not available for t
   ))]
   {
     if let Some(related_view) = webview_attributes.related_view {
-      webview_builder = webview_builder.with_related_view(related_view);
+      webview_builder = webview_builder.with_related_view(wry::WebViewHandle::from_webkit6_webview(related_view));
     }
   }
 

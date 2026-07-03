@@ -717,7 +717,7 @@ impl<'a, R: Runtime, M: Manager<R>> WebviewWindowBuilder<'a, R, M> {
     target_os = "openbsd"
   ))]
   #[must_use]
-  pub fn transient_for_raw(mut self, parent: &impl gtk::glib::IsA<gtk::Window>) -> Self {
+  pub fn transient_for_raw(mut self, parent: &impl gtk4::glib::prelude::IsA<gtk4::Window>) -> Self {
     self.window_builder = self.window_builder.transient_for_raw(parent);
     self
   }
@@ -1343,7 +1343,7 @@ impl<R: Runtime, M: Manager<R>> WebviewWindowBuilder<'_, R, M> {
       target_os = "openbsd",
     )
   ))]
-  pub fn with_related_view(mut self, related_view: webkit2gtk::WebView) -> Self {
+  pub fn with_related_view(mut self, related_view: webkit6::WebView) -> Self {
     self.webview_builder = self.webview_builder.with_related_view(related_view);
     self
   }
@@ -1871,11 +1871,11 @@ impl<R: Runtime> WebviewWindow<R> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  pub fn gtk_window(&self) -> crate::Result<gtk::ApplicationWindow> {
+  pub fn gtk_window(&self) -> crate::Result<gtk4::ApplicationWindow> {
     self.window.gtk_window()
   }
 
-  /// Returns the vertical [`gtk::Box`] that is added by default as the sole child of this window.
+  /// Returns the vertical [`gtk4::Box`] that is added by default as the sole child of this window.
   ///
   /// Note that this type can only be used on the main thread.
   #[cfg(any(
@@ -1885,7 +1885,7 @@ impl<R: Runtime> WebviewWindow<R> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  pub fn default_vbox(&self) -> crate::Result<gtk::Box> {
+  pub fn default_vbox(&self) -> crate::Result<gtk4::Box> {
     self.window.default_vbox()
   }
 
@@ -2344,7 +2344,7 @@ impl<R: Runtime> WebviewWindow<R> {
   ///         {
   ///           // see <https://docs.rs/webkit2gtk/2.0.0/webkit2gtk/struct.WebView.html>
   ///           // and <https://docs.rs/webkit2gtk/2.0.0/webkit2gtk/trait.WebViewExt.html>
-  ///           use webkit2gtk::WebViewExt;
+  ///           use webkit6::WebViewExt;
   ///           webview.inner().set_zoom_level(4.);
   ///         }
   ///

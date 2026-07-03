@@ -447,7 +447,7 @@ pub trait WindowBuilder: WindowBuilderBase {
 
   /// Sets the window to be created transient for parent.
   ///
-  /// See <https://docs.gtk.org/gtk3/method.Window.set_transient_for.html>
+  /// See <https://docs.gtk.org/gtk4/method.Window.set_transient_for.html>
   #[cfg(any(
     target_os = "linux",
     target_os = "dragonfly",
@@ -455,7 +455,7 @@ pub trait WindowBuilder: WindowBuilderBase {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn transient_for(self, parent: &impl gtk::glib::IsA<gtk::Window>) -> Self;
+  fn transient_for(self, parent: &impl gtk4::glib::prelude::IsA<gtk4::Window>) -> Self;
 
   /// Enables or disables drag and drop support.
   #[cfg(windows)]
@@ -644,7 +644,7 @@ impl<T: UserEvent, R: Runtime<T>> PartialEq for DetachedWindow<T, R> {
 }
 
 /// A raw window type that contains fields to access
-/// the HWND on Windows, gtk::ApplicationWindow on Linux
+/// the HWND on Windows, gtk4::ApplicationWindow on Linux
 pub struct RawWindow<'a> {
   #[cfg(windows)]
   pub hwnd: isize,
@@ -655,7 +655,7 @@ pub struct RawWindow<'a> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  pub gtk_window: &'a gtk::ApplicationWindow,
+  pub gtk_window: &'a gtk4::ApplicationWindow,
   #[cfg(any(
     target_os = "linux",
     target_os = "dragonfly",
@@ -663,6 +663,6 @@ pub struct RawWindow<'a> {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  pub default_vbox: Option<&'a gtk::Box>,
+  pub default_vbox: Option<&'a gtk4::Box>,
   pub _marker: &'a PhantomData<()>,
 }

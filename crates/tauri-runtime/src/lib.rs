@@ -759,9 +759,9 @@ pub trait WindowDispatch<T: UserEvent>: Debug + Clone + Send + Sync + Sized + 's
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn gtk_window(&self) -> Result<gtk::ApplicationWindow>;
+  fn gtk_window(&self) -> Result<gtk4::ApplicationWindow>;
 
-  /// Returns the vertical [`gtk::Box`] that is added by default as the sole child of this window.
+  /// Returns the vertical [`gtk4::Box`] that is added by default as the sole child of this window.
   #[cfg(any(
     target_os = "linux",
     target_os = "dragonfly",
@@ -769,7 +769,7 @@ pub trait WindowDispatch<T: UserEvent>: Debug + Clone + Send + Sync + Sized + 's
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn default_vbox(&self) -> Result<gtk::Box>;
+  fn default_vbox(&self) -> Result<gtk4::Box>;
 
   /// Returns the name of the Android activity associated with this window.
   #[cfg(target_os = "android")]

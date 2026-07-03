@@ -501,7 +501,7 @@ impl WindowBuilder for MockWindowBuilder {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn transient_for(self, parent: &impl gtk::glib::IsA<gtk::Window>) -> Self {
+  fn transient_for(self, parent: &impl gtk4::glib::prelude::IsA<gtk4::Window>) -> Self {
     self
   }
 
@@ -820,7 +820,7 @@ impl<T: UserEvent> WindowDispatch<T> for MockWindowDispatcher {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn gtk_window(&self) -> Result<gtk::ApplicationWindow> {
+  fn gtk_window(&self) -> Result<gtk4::ApplicationWindow> {
     unimplemented!()
   }
 
@@ -831,7 +831,7 @@ impl<T: UserEvent> WindowDispatch<T> for MockWindowDispatcher {
     target_os = "netbsd",
     target_os = "openbsd"
   ))]
-  fn default_vbox(&self) -> Result<gtk::Box> {
+  fn default_vbox(&self) -> Result<gtk4::Box> {
     unimplemented!()
   }
 

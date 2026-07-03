@@ -152,7 +152,7 @@ pub struct PlatformWebview(tauri_runtime_wry::Webview);
 
 #[cfg(feature = "wry")]
 impl PlatformWebview {
-  /// Returns [`webkit2gtk::WebView`] handle.
+  /// Returns [`webkit6::WebView`] handle.
   #[cfg(any(
     target_os = "linux",
     target_os = "dragonfly",
@@ -170,7 +170,7 @@ impl PlatformWebview {
       target_os = "openbsd"
     )))
   )]
-  pub fn inner(&self) -> webkit2gtk::WebView {
+  pub fn inner(&self) -> webkit6::WebView {
     self.0.clone()
   }
 
@@ -1273,7 +1273,7 @@ fn main() {
       target_os = "openbsd",
     )
   ))]
-  pub fn with_related_view(mut self, related_view: webkit2gtk::WebView) -> Self {
+  pub fn with_related_view(mut self, related_view: webkit6::WebView) -> Self {
     self.webview_attributes.related_view.replace(related_view);
     self
   }
@@ -1628,7 +1628,7 @@ tauri::Builder::default()
       {
         // see <https://docs.rs/webkit2gtk/2.0.0/webkit2gtk/struct.WebView.html>
         // and <https://docs.rs/webkit2gtk/2.0.0/webkit2gtk/trait.WebViewExt.html>
-        use webkit2gtk::WebViewExt;
+        use webkit6::WebViewExt;
         webview.inner().set_zoom_level(4.);
       }
 
