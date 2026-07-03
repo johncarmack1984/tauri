@@ -1311,8 +1311,9 @@ tauri::Builder::default()
         target_os = "openbsd"
       ))]
       if let (Ok(gtk_window), Ok(gtk_box)) = (window.gtk_window(), window.default_vbox()) {
-        // Linux menus are inert in this configuration: muda is built without its gtk feature.
-        let _ = (menu_.inner(), gtk_window, gtk_box);
+        let _ = menu_
+          .inner()
+          .init_for_gtk_window(&gtk_window, Some(&gtk_box));
       }
     })?;
 
@@ -1351,8 +1352,7 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          // Linux menus are inert in this configuration: muda is built without its gtk feature.
-          let _ = (menu.inner(), gtk_window);
+          let _ = menu.inner().remove_for_gtk_window(&gtk_window);
         }
       })?;
     }
@@ -1388,8 +1388,7 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          // Linux menus are inert in this configuration: muda is built without its gtk feature.
-          let _ = (menu_.inner(), gtk_window);
+          let _ = menu_.inner().hide_for_gtk_window(&gtk_window);
         }
       })?;
     }
@@ -1421,8 +1420,7 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          // Linux menus are inert in this configuration: muda is built without its gtk feature.
-          let _ = (menu_.inner(), gtk_window);
+          let _ = menu_.inner().show_for_gtk_window(&gtk_window);
         }
       })?;
     }
@@ -1455,9 +1453,7 @@ tauri::Builder::default()
           target_os = "openbsd"
         ))]
         if let Ok(gtk_window) = window.gtk_window() {
-          // Linux menus are inert in this configuration: muda is built without its gtk feature.
-          let _ = (menu_.inner(), gtk_window);
-          let _ = tx.send(false);
+          let _ = tx.send(menu_.inner().is_visible_on_gtk_window(&gtk_window));
         }
       })?;
 

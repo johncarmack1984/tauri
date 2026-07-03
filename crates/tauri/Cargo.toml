@@ -89,6 +89,7 @@ cookie = "0.18"
 [target.'cfg(any(target_os = "linux", target_os = "dragonfly", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd", target_os = "windows", target_os = "macos"))'.dependencies]
 muda = { version = "0.19", default-features = false, features = [
   "serde",
+  "gtk",
 ] }
 tray-icon = { version = "0.24", default-features = false, features = [
   "serde",

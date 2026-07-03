@@ -85,8 +85,9 @@ impl<R: Runtime> MenuManager<R> {
           target_os = "netbsd",
           target_os = "openbsd"
         ))]
-        // Linux menus are inert in this configuration: muda is built without its gtk feature.
-        let _ = (menu.inner(), raw.gtk_window, raw.default_vbox);
+        let _ = menu
+          .inner()
+          .init_for_gtk_window(raw.gtk_window, raw.default_vbox);
       })
     } else {
       None
