@@ -3626,7 +3626,7 @@ fn handle_user_message<T: UserEvent>(
             ))]
             let reparent_result = {
               if let Some(container) = new_parent_window.default_vbox() {
-                wry::WebViewExtUnix::reparent(&*webview.inner, container)
+                wry::WebViewExtUnix::reparent_gtk(&*webview.inner, container)
               } else {
                 Err(wry::Error::MessageSender)
               }
@@ -4833,7 +4833,7 @@ You may have it installed on another user account, but it is not available for t
               target_os = "netbsd",
               target_os = "openbsd",
             ))]
-            webview: wry::WebViewHandleExtUnix::into_webkit6_webview(features.opener.webview),
+            webview: wry::WebViewHandleExtUnix::into_webkit_webview(features.opener.webview),
             #[cfg(windows)]
             webview: wry::WebViewHandleExtWindows::into_core_webview2(features.opener.webview),
             #[cfg(target_os = "macos")]
@@ -4870,7 +4870,7 @@ You may have it installed on another user account, but it is not available for t
               target_os = "netbsd",
               target_os = "openbsd",
             ))]
-            webview: wry::WebViewHandle::from_webkit6_webview(webview.webview()),
+            webview: wry::WebViewHandle::from_webkit_webview(webview.webview()),
             #[cfg(windows)]
             webview: webview.webview(),
           }
@@ -5021,7 +5021,7 @@ You may have it installed on another user account, but it is not available for t
   ))]
   {
     if let Some(related_view) = webview_attributes.related_view {
-      webview_builder = webview_builder.with_related_view(wry::WebViewHandle::from_webkit6_webview(related_view));
+      webview_builder = webview_builder.with_related_view(wry::WebViewHandle::from_webkit_webview(related_view));
     }
   }
 
