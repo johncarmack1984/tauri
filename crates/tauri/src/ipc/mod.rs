@@ -580,6 +580,66 @@ impl<R: Runtime> InvokeMessage<R> {
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct CallbackFn(pub u32);
 
+/// Metadata about a command defined with `#[tauri::command]`.
+///
+/// This can be used by frameworks built on Tauri to introspect the registered commands.
+/// Use [`command_metadata!`](crate::command_metadata) to get it.
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+#[non_exhaustive]
+pub struct CommandMetadata {
+  /// The name of the command, after `#[tauri::command(rename = "...")]`.
+  ///
+  /// Commands registered in a plugin's invoke handler are invoked as `plugin:<plugin-name>|<name>`,
+  /// but the plugin is only known where the command is registered so it is not included here.
+  pub name: &'static str,
+  /// The Rust-doc comments for the command.
+  pub docs: &'static str,
+  /// Whether the command has a deprecated attribute.
+  pub deprecated: Option<CommandMetadataDeprecated>,
+  /// The keys used to deserialize each argument of the command function, in declaration order
+  /// and after `rename_all`. Wildcard (`_`) arguments have an empty key.
+  ///
+  /// Every argument is listed, including the ones Tauri injects instead of reading them from the
+  /// invoke payload (e.g. [`State`](crate::State), [`AppHandle`](crate::AppHandle),
+  /// [`Window`](crate::Window) or [`Request`]), so the positions match the
+  /// function signature. Filter them by type to get the keys the frontend must pass.
+  pub arguments: &'static [&'static str],
+}
+
+impl CommandMetadata {
+  #[doc(hidden)]
+  pub const fn __new(
+    name: &'static str,
+    docs: &'static str,
+    deprecated: Option<CommandMetadataDeprecated>,
+    arguments: &'static [&'static str],
+  ) -> Self {
+    Self {
+      name,
+      docs,
+      deprecated,
+      arguments,
+    }
+  }
+}
+
+/// Represents the Rust `#[deprecated]` attribute on a command.
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+#[non_exhaustive]
+pub struct CommandMetadataDeprecated {
+  /// Deprecation note for the developer.
+  pub note: Option<&'static str>,
+  /// Rust version where the item became deprecated.
+  pub since: Option<&'static str>,
+}
+
+impl CommandMetadataDeprecated {
+  #[doc(hidden)]
+  pub const fn __new(note: Option<&'static str>, since: Option<&'static str>) -> Self {
+    Self { note, since }
+  }
+}
+
 #[cfg(test)]
 mod tests {
   use super::*;
