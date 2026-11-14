@@ -360,7 +360,7 @@ fn extend_permission_entry_schema(root_schema: &mut Schema, acl: &BTreeMap<Strin
         },
         "then": {
           "properties": {
-            ALLOW: scope_value.clone(),
+            ALLOW: scope_value,
             DENY: scope_value,
           }
         }

@@ -587,13 +587,11 @@ fn create_cef_helpers(bundle_directory: &Path, settings: &Settings) -> crate::Re
     let helper_resources = helper_contents.join("Resources");
 
     // Create directory structure
-    fs::create_dir_all(&helper_macos).fs_context(
-      "failed to create helper MacOS directory",
-      helper_macos.to_path_buf(),
-    )?;
+    fs::create_dir_all(&helper_macos)
+      .fs_context("failed to create helper MacOS directory", &helper_macos)?;
     fs::create_dir_all(&helper_resources).fs_context(
       "failed to create helper Resources directory",
-      helper_resources.to_path_buf(),
+      helper_resources,
     )?;
 
     // Create Info.plist for helper

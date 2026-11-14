@@ -65,8 +65,8 @@ impl<R: Runtime> MenuManager<R> {
     #[cfg(target_os = "macos")]
     return None;
 
-    #[cfg_attr(target_os = "macos", allow(unused_variables, unreachable_code))]
-    // Linux without a `gtk3`/`gtk4` feature has no menu integration to run.
+    #[cfg_attr(target_os = "macos", allow(unreachable_code))]
+    // Linux without a `gtk3`/`gtk4` feature has no menu integration to run, and macOS returned above.
     #[cfg_attr(all(not(windows), not(gtk)), allow(unused_variables))]
     {
       let menu = window_menu.menu.clone();
