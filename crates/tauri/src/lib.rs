@@ -66,7 +66,7 @@
 //! - **config-toml**: Adds support to TOML format for the configuration `Tauri.toml`.
 //! - **image-ico**: Adds support to parse `.ico` image, see [`image::Image`].
 //! - **image-png**: Adds support to parse `.png` image, see [`image::Image`].
-//! - **specta**: Add support for [`specta::specta`](https://docs.rs/specta/%5E2.0.0-rc.9/specta/attr.specta.html) with Tauri arguments such as [`State`], [`Window`] and [`AppHandle`]. Also implements [`specta::Type`] for [`ipc::Channel`], [`ipc::Request`] and [`ipc::Response`].
+//! - **specta**: Implements [`specta::Type`] for [`ipc::Channel`], [`ipc::Request`], [`ipc::Response`] and [`plugin::PermissionState`], so Specta-based tooling such as tauri-specta can describe commands that use them.
 //! - **dynamic-acl** *(enabled by default)*: Enables you to add ACLs at runtime, notably it enables the [`Manager::add_capability`] function.
 //!
 //! ## Cargo allowlist features
@@ -1125,41 +1125,6 @@ impl<T> UnsafeSend<T> {
 #[cfg(any(test, feature = "test"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test")))]
 pub mod test;
-
-#[cfg(feature = "specta")]
-const _: () = {
-  use specta::{Types, datatype::DataType, function::FunctionArg};
-
-  impl<T: Send + Sync + 'static> FunctionArg for crate::State<'_, T> {
-    fn to_datatype(_: &mut Types) -> Option<DataType> {
-      None
-    }
-  }
-
-  impl<R: crate::Runtime> FunctionArg for crate::AppHandle<R> {
-    fn to_datatype(_: &mut Types) -> Option<DataType> {
-      None
-    }
-  }
-
-  impl<R: crate::Runtime> FunctionArg for crate::Window<R> {
-    fn to_datatype(_: &mut Types) -> Option<DataType> {
-      None
-    }
-  }
-
-  impl<R: crate::Runtime> FunctionArg for crate::Webview<R> {
-    fn to_datatype(_: &mut Types) -> Option<DataType> {
-      None
-    }
-  }
-
-  impl<R: crate::Runtime> FunctionArg for crate::WebviewWindow<R> {
-    fn to_datatype(_: &mut Types) -> Option<DataType> {
-      None
-    }
-  }
-};
 
 #[cfg(test)]
 mod tests {

@@ -76,7 +76,6 @@ heck = "0.5"
 log = "0.4.21"
 dunce = "1"
 specta = { version = "^2.0.0-rc.25", optional = true, default-features = false, features = [
-  "function",
   "derive",
   "std",
 ] }
